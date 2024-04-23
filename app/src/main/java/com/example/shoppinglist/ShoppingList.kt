@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -74,18 +75,22 @@ fun ShoppingList() {
                 if (item.isEditing) {
                     ShoppingItemEditor(item, onEditComplete = { editedName, editedQuantity ->
                         shoppingList = shoppingList.map { it -> it.copy(isEditing = false) }
-                        var findItem = shoppingList.find {it.id == item.id}
+                        var findItem = shoppingList.find { it.id == item.id }
                         findItem?.let {
                             it.name = editedName
                             it.quantity = editedQuantity
                         }
                     })
                 } else {
-                    ShoppingListItem(item, onEditClick = {
-                        shoppingList = shoppingList.map{it.copy(isEditing = item.id==it.id)}
-                    }, onDeleteClick = {
-                        shoppingList = shoppingList.filter {it -> it.id != item.id}
-                    })
+                    ShoppingListItem(
+                        item,
+                        onEditClick = {
+                            shoppingList =
+                                shoppingList.map { it.copy(isEditing = item.id == it.id) }
+                        },
+                        onDeleteClick = {
+                            shoppingList = shoppingList.filter { it -> it.id != item.id }
+                        })
                 }
             }
         }
@@ -160,15 +165,20 @@ fun ShoppingListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .border(border = BorderStroke(2.dp, Color(0XFF018786)), shape = RoundedCornerShape(20))
+            .border(border = BorderStroke(2.dp, Color(0XFF018786)), shape = RoundedCornerShape(20)),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(item.name, modifier = Modifier.padding(8.dp))
-        Text("Quantity: ${item.quantity}", modifier = Modifier.padding(8.dp))
-        Row(modifier = Modifier.padding()) {
+        Row {
+            Text(item.name, modifier = Modifier.padding(8.dp))
+            Text("Quantity: ${item.quantity}", modifier = Modifier.padding(8.dp))
+        }
+        Row(
+            modifier = Modifier.padding()
+        ) {
             IconButton(onClick = onEditClick) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = null)
             }
-            IconButton(onClick = { onDeleteClick }) {
+            IconButton(onClick = onDeleteClick) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
         }
